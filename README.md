@@ -67,5 +67,18 @@ swift-grdb-tca.................FAILED
 SwiftDataTCA...................OK
 ```
 
-The `.` indicators at the start show the responses arriving from GitHub. The script delays the final output until it
-receives everything from GitHub at which point it sorts the output by repository name.
+The `.` indicators at the start show the responses arriving from GitHub. By default, the script delays the final output
+until it receives everything from GitHub at which point it sorts the output by repository name.
+
+## Options
+
+* Use `-f` or `--fast` to disable the sorting of the output
+* Supply name patterns to limit output to repositories that match (case-insensitive)
+
+```
+% ghstats --fast sf2 sound
+SF2Lib..OK
+SoundFonts..OK
+SF2LibAU..OK
+SoundFontsPlus..FAILED
+```

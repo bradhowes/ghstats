@@ -15,6 +15,7 @@ from github.Workflow import Workflow
 from github.PaginatedList import PaginatedList
 from termcolor import colored
 from typing import Optional
+import argparse
 import os
 import re
 import sys
@@ -57,9 +58,18 @@ class Status:
     return self.repo.lower() < other.repo.lower()
 
 
-def run(gh_token: str) -> None:
+def run(gh_token: str, args: list[str]) -> None:
+  parser = argparse.ArgumentParser(
+    prog='ghstats',
+    description='query GitHub for repo status'
+  )
+  parser.add_argument('-f', '--fast', action='store_true', help='fast mode - do not sort output')
+  parser.add_argument('pattern', nargs='*', help='zero or more regular expressions to filter names')
+  pargs = parser.parse_args(args)
+
   results: list[Status] = []
-  pattern = re.compile(sys.argv[1]) if len(sys.argv) > 1 else None
+  pattern = re.compile('|'.join(pargs.pattern), re.IGNORECASE) if pargs.pattern else None
+  fast = pargs.fast
 
   with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
 
@@ -67,8 +77,12 @@ def run(gh_token: str) -> None:
       for flow in list(fut.result()):
         if flow.name == 'CI':
           for run in flow.get_runs():
-            results.append(Status(repo.name, run.created_at, State.from_conclusion(run.conclusion)))
-            print(".", end='', flush=True)
+            result = Status(repo.name, run.created_at, State.from_conclusion(run.conclusion))
+            if fast:
+              result.show(len(result.repo))
+            else:
+              results.append(result)
+              print(".", end='', flush=True)
             break
           break
 
@@ -79,10 +93,13 @@ def run(gh_token: str) -> None:
       get_workflows_fut = executor.submit(repo.get_workflows)
       get_workflows_fut.add_done_callback(partial(workflows_fut_done, repo=repo))
 
+  if fast:
+    return
+
   if not results:
     print('*** nothing found')
     return
-
+  
   print('')
   max_name_width = max([len(r.repo) for r in results])
   for result in sorted(results):
@@ -94,5 +111,5 @@ if __name__ == '__main__':
   if gh_token is None:
     print("*** GITHUB_TOKEN is undefined")
     sys.exit(1)
-    
-  run(gh_token)
+
+  run(gh_token=gh_token, args=sys.argv[1:])

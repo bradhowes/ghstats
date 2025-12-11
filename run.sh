@@ -10,4 +10,4 @@ root=$(dirname --  "$(readlink -f ${BASH_SOURCE[0]})")
 [[ -d "${root}/venv" ]] || die "${root}/venv directory does not exist - run ${root}/install.sh"
 source "${root}/venv/bin/activate"
 
-python3 "${root}/ghstats.py"
+python3 "${root}/ghstats.py" "${@}"
