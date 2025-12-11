@@ -1,7 +1,7 @@
 # ghstats
 
-This is a simple Python script that fetches the status of all of your known GitHub repositories and 
-shows their current 'build' or CI pipeline status.
+This is a simple Python script that fetches info for all your known GitHub repositories and shows their _build_ or CI
+pipeline status.
 
 ![ghstats](ghstats.png)
 
@@ -25,7 +25,8 @@ Run the script:
 
 # Running
 
-After installation, there will be a `ghstats` link that can be executed -- it points to the `run.sh` script in the repository.
+After installation, there will be a `ghstats` link that you execute (it points to the [run.sh](run.sh) script in the
+repository)
 
 Before running though, you first you need to set a `GITHUB_TOKEN` environment variable with a valid GitHub token that
 has (at least) read-only rights to your account:
@@ -65,4 +66,5 @@ swift-grdb-tca.................FAILED
 SwiftDataTCA...................OK
 ```
 
-| **Note** that the script can take several seconds to return
+> [!TIP]
+> The script can take several seconds to return
