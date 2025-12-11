@@ -68,6 +68,7 @@ def run(gh_token: str) -> None:
         if flow.name == 'CI':
           for run in flow.get_runs():
             results.append(Status(repo.name, run.created_at, State.from_conclusion(run.conclusion)))
+            print(".", end='', flush=True)
             break
           break
 
@@ -82,6 +83,7 @@ def run(gh_token: str) -> None:
     print('*** nothing found')
     return
 
+  print('')
   max_name_width = max([len(r.repo) for r in results])
   for result in sorted(results):
     result.show(max_name_width)
@@ -92,5 +94,5 @@ if __name__ == '__main__':
   if gh_token is None:
     print("*** GITHUB_TOKEN is undefined")
     sys.exit(1)
-
+    
   run(gh_token)

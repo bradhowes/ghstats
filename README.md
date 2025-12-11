@@ -39,6 +39,7 @@ Once done, you should be all set to run:
 
 ```
 % ./ghstats
+.........................
 auv3-support...................OK
 AUv3Controls...................OK
 AUv3Support....................OK
@@ -66,5 +67,5 @@ swift-grdb-tca.................FAILED
 SwiftDataTCA...................OK
 ```
 
-> [!TIP]
-> The script can take several seconds to return
+The `.` indicators at the start show the responses arriving from GitHub. The script delays the final output until it
+receives everything from GitHub at which point it sorts the output by repository name.
